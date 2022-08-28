@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    # Check files and directories for weak permissions
+    - name: Check files and directories for weak permissions
+      become: true
+      become_user: root
+      ansible.builtin.shell:
+        cmd: "find /boot /dev /etc /home /media /mnt /opt /root /srv /tmp /usr /var -perm -o+rw -ls | grep -Ev 'lrwxrwxrwx|crw-rw-rw-|drwxrwxrwt'"
+      ignore_errors: true
+      register: weak_file_permissions_playbook
+
+    # Store the file permission output locally
+    - name: Store the file permission output locally
+      copy:
+        content: "{{ weak_file_permissions_playbook.stdout }}"
+        dest: file_permissions/{{ ansible_hostname }}_weak_file_permissions_playbook.txt
+      delegate_to: localhost

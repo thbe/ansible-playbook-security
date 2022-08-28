@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    # Check host with aide
+    - name: Check host with aide
+      become: true
+      become_user: root
+      ansible.builtin.command:
+        cmd: aide --check
+      ignore_errors: true
+      register: aide_check_playbook
+
+    # Store the aide output locally
+    - name: Store the aide output locally
+      copy:
+        content: "{{ aide_check_playbook.stdout }}"
+        dest: hosts/{{ ansible_hostname }}_aide_check_playbook.txt
+      delegate_to: localhost
