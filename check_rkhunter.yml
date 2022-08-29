@@ -15,4 +15,4 @@
     - name: Store the rkhunter output locally
       ansible.builtin.fetch:
         src: /var/log/rkhunter/rkhunter.log
-        dest: rkhunter/
+        dest: results/rkhunter/

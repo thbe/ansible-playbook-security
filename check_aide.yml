@@ -16,5 +16,5 @@
     - name: Store the aide output locally
       copy:
         content: "{{ aide_check_playbook.stdout }}"
-        dest: hosts/{{ ansible_hostname }}_aide_check_playbook.txt
+        dest: results/aide/{{ ansible_hostname }}_check.txt
       delegate_to: localhost

@@ -15,9 +15,9 @@
     - name: Store the lynis log locally
       ansible.builtin.fetch:
         src: /var/log/lynis.log
-        dest: lynis/
+        dest: results/lynis/
 
     - name: Store the lynis report locally
       ansible.builtin.fetch:
         src: /var/log/lynis-report.dat
-        dest: lynis/
+        dest: results/lynis/

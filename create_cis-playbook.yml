@@ -1,0 +1,36 @@
+---
+- hosts: all
+  gather_facts: true
+
+  tasks:
+    # Create host specific CIS remediation script
+    - name: Create host specific CIS remediation script (RHEL8)
+      ansible.builtin.command: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
+      become: true
+      become_user: root
+      register: rhel8_cis_remediation_playbook
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Create host specific CIS remediation script (RHEL9)
+      ansible.builtin.command: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
+      become: true
+      become_user: root
+      register: rhel9_cis_remediation_playbook
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 9
+
+    # Store the CIS remediation script locally (RHEL8)
+    - name: Store the CIS remediation script locally
+      copy:
+        content: "{{ rhel8_cis_remediation_playbook.stdout }}"
+        dest: results/cis/{{ ansible_hostname }}_rhel8_cis_remediation_playbook.yml
+      delegate_to: localhost
+
+    - name: Store the CIS remediation script locally (RHEL9)
+      copy:
+        content: "{{ rhel9_cis_remediation_playbook.stdout }}"
+        dest: results/cis/{{ ansible_hostname }}_rhel9_cis_remediation_playbook.yml
+      delegate_to: localhost
