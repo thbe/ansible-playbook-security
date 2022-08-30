@@ -24,13 +24,19 @@
 
     # Store the CIS remediation script locally (RHEL8)
     - name: Store the CIS remediation script locally
-      copy:
+      ansible.builtin.copy:
         content: "{{ rhel8_cis_remediation_playbook.stdout }}"
         dest: results/cis/{{ ansible_hostname }}_rhel8_cis_remediation_playbook.yml
       delegate_to: localhost
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
 
     - name: Store the CIS remediation script locally (RHEL9)
-      copy:
+      ansible.builtin.copy:
         content: "{{ rhel9_cis_remediation_playbook.stdout }}"
         dest: results/cis/{{ ansible_hostname }}_rhel9_cis_remediation_playbook.yml
       delegate_to: localhost
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 9

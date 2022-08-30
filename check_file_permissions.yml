@@ -14,7 +14,7 @@
 
     # Store the file permission output locally
     - name: Store the file permission output locally
-      copy:
+      ansible.builtin.copy:
         content: "{{ weak_file_permissions_playbook.stdout }}"
         dest: results/permissions/{{ ansible_hostname }}_check.txt
       delegate_to: localhost
