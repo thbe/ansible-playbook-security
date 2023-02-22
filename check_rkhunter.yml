@@ -9,8 +9,9 @@
       become_user: root
       ansible.builtin.command:
         cmd: /usr/bin/rkhunter --cronjob --quiet
-      ignore_errors: true
+      register: rkhunter_check_playbook
       changed_when: false
+      failed_when: "'FAILED' in rkhunter_check_playbook.stderr"
 
     - name: Store the rkhunter output locally
       ansible.builtin.fetch:
