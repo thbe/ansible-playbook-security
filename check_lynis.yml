@@ -9,8 +9,9 @@
       become_user: root
       ansible.builtin.command:
         cmd: /usr/bin/lynis audit system --quick --auditor "Ansible" --quiet
-      ignore_errors: true
+      register: lynis_check_playbook
       changed_when: false
+      failed_when: "'FAILED' in aide_check_playbook.stderr"
 
     - name: Store locally the lynis log file
       ansible.builtin.fetch:
