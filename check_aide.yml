@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- name: Audit local host with aide
+  hosts: all
   gather_facts: true
 
   tasks:
-    # Check host with aide
-    - name: Check host with aide
+    - name: aide audit run
       become: true
       become_user: root
       ansible.builtin.command:
@@ -12,7 +12,6 @@
       ignore_errors: true
       register: aide_check_playbook
 
-    # Store the aide output locally
     - name: Store the aide output locally
       ansible.builtin.copy:
         content: "{{ aide_check_playbook.stdout }}"
