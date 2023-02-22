@@ -10,10 +10,12 @@
       ansible.builtin.shell:
         cmd: "find /boot /dev /etc /home /media /mnt /opt /root /srv /tmp /usr /var -perm -o+rw -ls | grep -Ev 'lrwxrwxrwx|crw-rw-rw-|drwxrwxrwt'"
       ignore_errors: true
+      changed_when: false
       register: weak_file_permissions_playbook
 
     - name: Store the file permission output locally
       ansible.builtin.copy:
         content: "{{ weak_file_permissions_playbook.stdout }}"
         dest: results/permissions/{{ ansible_hostname }}_check.txt
+        mode: 0644
       delegate_to: localhost
