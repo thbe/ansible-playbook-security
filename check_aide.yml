@@ -9,9 +9,9 @@
       become_user: root
       ansible.builtin.command:
         cmd: aide --check
-      ignore_errors: true
-      changed_when: false
       register: aide_check_playbook
+      changed_when: false
+      failed_when: "'FAILED' in aide_check_playbook.stderr"
 
     - name: Store the aide output locally
       ansible.builtin.copy:
