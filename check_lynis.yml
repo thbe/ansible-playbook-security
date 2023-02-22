@@ -10,13 +10,16 @@
       ansible.builtin.command:
         cmd: /usr/bin/lynis audit system --quick --auditor "Ansible" --quiet
       ignore_errors: true
+      changed_when: false
 
     - name: Store locally the lynis log file
       ansible.builtin.fetch:
         src: /var/log/lynis.log
         dest: results/lynis/
+        mode: 0644
 
     - name: Store locally the lynis report
       ansible.builtin.fetch:
         src: /var/log/lynis-report.dat
         dest: results/lynis/
+        mode: 0644
