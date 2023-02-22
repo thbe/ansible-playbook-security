@@ -1,9 +1,9 @@
 ---
-- hosts: all
+- name: CIS remediation
+  hosts: all
   gather_facts: true
 
   tasks:
-    # Create host specific CIS remediation script
     - name: Create host specific CIS remediation script (RHEL8)
       ansible.builtin.command: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
       become: true
@@ -22,7 +22,6 @@
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int == 9
 
-    # Store the CIS remediation script locally (RHEL8)
     - name: Store the CIS remediation script locally
       ansible.builtin.copy:
         content: "{{ rhel8_cis_remediation_playbook.stdout }}"
