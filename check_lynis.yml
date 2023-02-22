@@ -11,7 +11,7 @@
         cmd: /usr/bin/lynis audit system --quick --auditor "Ansible" --quiet
       register: lynis_check_playbook
       changed_when: false
-      failed_when: "'FAILED' in aide_check_playbook.stderr"
+      failed_when: "'FAILED' in lynis_check_playbook.stderr"
 
     - name: Store locally the lynis log file
       ansible.builtin.fetch:
