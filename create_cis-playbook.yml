@@ -5,19 +5,25 @@
 
   tasks:
     - name: Create host specific CIS remediation script (RHEL8)
-      ansible.builtin.command: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
+      ansible.builtin.command:
+        cmd: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
       become: true
       become_user: root
       register: rhel8_cis_remediation_playbook
+      changed_when: false
+      failed_when: "'FAILED' in rhel8_cis_remediation_playbook.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int == 8
 
     - name: Create host specific CIS remediation script (RHEL9)
-      ansible.builtin.command: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
+      ansible.builtin.command:
+        cmd: oscap xccdf generate fix --profile cis --fix-type ansible /usr/share/xml/scap/ssg/content/ssg-rhel8-xccdf.xml
       become: true
       become_user: root
       register: rhel9_cis_remediation_playbook
+      changed_when: false
+      failed_when: "'FAILED' in rhel9_cis_remediation_playbook.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int == 9
@@ -26,6 +32,7 @@
       ansible.builtin.copy:
         content: "{{ rhel8_cis_remediation_playbook.stdout }}"
         dest: results/cis/{{ ansible_hostname }}_rhel8_cis_remediation_playbook.yml
+        mode: 0644
       delegate_to: localhost
       when:
         - ansible_facts['os_family'] == "RedHat"
@@ -35,6 +42,7 @@
       ansible.builtin.copy:
         content: "{{ rhel9_cis_remediation_playbook.stdout }}"
         dest: results/cis/{{ ansible_hostname }}_rhel9_cis_remediation_playbook.yml
+        mode: 0644
       delegate_to: localhost
       when:
         - ansible_facts['os_family'] == "RedHat"
