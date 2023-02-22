@@ -4,16 +4,18 @@
   gather_facts: true
 
   tasks:
-    - name: aide audit run
+    - name: Aide audit run
       become: true
       become_user: root
       ansible.builtin.command:
         cmd: aide --check
       ignore_errors: true
+      changed_when: false
       register: aide_check_playbook
 
     - name: Store the aide output locally
       ansible.builtin.copy:
         content: "{{ aide_check_playbook.stdout }}"
         dest: results/aide/{{ ansible_hostname }}_check.txt
+        mode: 0644
       delegate_to: localhost
