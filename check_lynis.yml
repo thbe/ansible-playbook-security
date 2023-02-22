@@ -1,23 +1,22 @@
 ---
-- hosts: all
+- name: Host check with Lynis
+  hosts: all
   gather_facts: true
 
   tasks:
-    # Check host with lynis
-    - name: Check host with lynis
+    - name: Lynis Audit run
       become: true
       become_user: root
       ansible.builtin.command:
         cmd: /usr/bin/lynis audit system --quick --auditor "Ansible" --quiet
       ignore_errors: true
 
-    # Store the lynis output locally
-    - name: Store the lynis log locally
+    - name: Store locally the lynis log file
       ansible.builtin.fetch:
         src: /var/log/lynis.log
         dest: results/lynis/
 
-    - name: Store the lynis report locally
+    - name: Store locally the lynis report
       ansible.builtin.fetch:
         src: /var/log/lynis-report.dat
         dest: results/lynis/
