@@ -17,4 +17,4 @@
       ansible.builtin.fetch:
         src: /var/log/rkhunter/rkhunter.log
         dest: results/rkhunter/
-        mode: 0644
+        mode: "0644"

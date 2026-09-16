@@ -8,14 +8,17 @@
       become: true
       become_user: root
       ansible.builtin.shell:
-        cmd: "find /boot /dev /etc /home /media /mnt /opt /root /srv /tmp /usr /var -perm -o+rw -ls | grep -Ev 'lrwxrwxrwx|crw-rw-rw-|drwxrwxrwt'"
-      ignore_errors: true
+        cmd: "set -o pipefail; find /boot /dev /etc /home /media /mnt /opt /root /srv /tmp /usr /var -perm -o+rw -ls | grep -Ev 'lrwxrwxrwx|crw-rw-rw-|drwxrwxrwt'"
+        executable: /bin/bash
       changed_when: false
+      # grep exits 1 when no weak permissions are found (the desired result);
+      # only treat exit codes >1 (real find/grep errors) as failures.
+      failed_when: weak_file_permissions_playbook.rc > 1
       register: weak_file_permissions_playbook
 
     - name: Store the file permission output locally
       ansible.builtin.copy:
         content: "{{ weak_file_permissions_playbook.stdout }}"
         dest: results/permissions/{{ ansible_hostname }}_check.txt
-        mode: 0644
+        mode: "0644"
       delegate_to: localhost

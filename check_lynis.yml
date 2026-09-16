@@ -17,10 +17,10 @@
       ansible.builtin.fetch:
         src: /var/log/lynis.log
         dest: results/lynis/
-        mode: 0644
+        mode: "0644"
 
     - name: Store locally the lynis report
       ansible.builtin.fetch:
         src: /var/log/lynis-report.dat
         dest: results/lynis/
-        mode: 0644
+        mode: "0644"
